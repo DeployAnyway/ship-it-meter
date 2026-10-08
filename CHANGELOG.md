@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — unreleased candidate
+## 0.3.0 — 2026-10-08
 
 - Useful structured API/CLI additions described in README.
 - TypeScript declarations, CommonJS entry, coverage gates and installed archive checks.
