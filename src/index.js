@@ -123,3 +123,38 @@ export function shipIt(input = {}) {
             : "Suspiciously Ready";
   return { score, verdict, reasons };
 }
+
+/** Return actionable preflight tasks alongside the existing score. */
+export function preflight(input = {}) {
+  const result = shipIt(input);
+  const actions = [];
+  if (input.build !== true)
+    actions.push("Get a passing build. Confidence is not a build artifact.");
+  if (!input.tests)
+    actions.push("Run tests and report the count. Vibes are not assertions.");
+  if (input.failingTests)
+    actions.push("Fix failing tests. Red is not a festive deployment theme.");
+  if (input.coverage === undefined || input.coverage < 80)
+    actions.push(
+      "Measure coverage and review untested paths. The bugs enjoy privacy.",
+    );
+  if (input.criticalIssues)
+    actions.push(
+      "Resolve critical issues. The incident channel deserves a quiet afternoon.",
+    );
+  if (input.lintFailures)
+    actions.push("Fix lint failures. Let the semicolons retire in peace.");
+  if (input.uncommittedChanges)
+    actions.push(
+      "Commit or stash local changes. Your laptop is not the release archive.",
+    );
+  if (input.day?.trim().toLowerCase() === "friday")
+    actions.push(
+      "Confirm rollback and on-call cover. The weekend has other plans.",
+    );
+  if (!actions.length)
+    actions.push(
+      "Confirm monitoring and rollback. Even excellent evidence needs a parachute.",
+    );
+  return { ...result, actions };
+}

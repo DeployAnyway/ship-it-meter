@@ -153,3 +153,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [doggo-log](https://github.com/DeployAnyway/doggo-log)
 - [ship-it-meter](https://github.com/DeployAnyway/ship-it-meter)
 - [bro-say](https://github.com/DeployAnyway/bro-say)
+
+## Preflight, with a parachute
+
+`preflight(input)` returns the same score, verdict and reasons as `shipIt`, plus actionable `actions`. CLI `--checklist` includes them in text or JSON output. It uses only supplied evidence and is not a deployment guarantee.
+
+```sh
+npx @deployanyway/ship-it-meter --tests 125 --coverage 82 --build pass --day friday --checklist
+```
+
+API (import the named functions from this package):
+
+```js
+preflight({ tests: 125, coverage: 82, build: true, day: "friday" });
+```

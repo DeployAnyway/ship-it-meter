@@ -1,6 +1,6 @@
 {
   "name": "@deployanyway/ship-it-meter",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.",
   "type": "module",
   "exports": "./src/index.js",

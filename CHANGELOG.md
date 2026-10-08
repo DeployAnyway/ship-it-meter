@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-10-08
+
+- Preflight, with a parachute: `preflight(input)` returns the same score, verdict and reasons as `shipIt`, plus actionable `actions`. CLI `--checklist` includes them in text or JSON output. It uses only supplied evidence and is not a deployment guarantee.
+- Add npm and CI badges to the published README.
+
 ## 0.1.1 — 2026-10-08
 
 - Correct npm installation and npx documentation after the initial publication.
