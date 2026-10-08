@@ -17,6 +17,35 @@ const allowed = [
   "day",
 ];
 
+/** Explicit automation gate; a score alone is never a deployment approval. */
+export function releaseGate(input = {}, options = {}) {
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    throw new TypeError("Gate options must be an object.");
+  const minScore = options.minScore ?? 80;
+  if (
+    typeof minScore !== "number" ||
+    !Number.isFinite(minScore) ||
+    minScore < 0 ||
+    minScore > 100
+  )
+    throw new RangeError("minScore must be between 0 and 100.");
+  const result = preflight(input);
+  const blockers = [];
+  if (!input.tests)
+    blockers.push("Provide a positive test count. Vibes cannot pass CI.");
+  if (input.build !== true) blockers.push("A passing build is required.");
+  if (input.coverage === undefined)
+    blockers.push("Coverage evidence is required.");
+  if (input.failingTests) blockers.push("Failing tests block the gate.");
+  if (input.criticalIssues) blockers.push("Critical issues block the gate.");
+  if (input.lintFailures) blockers.push("Lint failures block the gate.");
+  if (input.uncommittedChanges)
+    blockers.push("Uncommitted changes block the gate.");
+  if (result.score < minScore)
+    blockers.push(`Score ${result.score} is below ${minScore}.`);
+  return { ...result, minScore, passed: blockers.length === 0, blockers };
+}
+
 /**
  * Calculate a stateless readiness score. Missing evidence reduces the score.
  * @param {{tests?: number, failingTests?: number, coverage?: number, build?: boolean, uncommittedChanges?: boolean, branch?: string, day?: string, criticalIssues?: number, lintFailures?: number}} [input]

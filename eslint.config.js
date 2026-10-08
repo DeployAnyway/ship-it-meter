@@ -1,13 +1,13 @@
 export default [
   {
-    ignores: ["node_modules/**"],
+    ignores: ["node_modules/**", "dist/**", "coverage/**"],
   },
   {
     files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      globals: { console: "readonly", process: "readonly" },
+      globals: { console: "readonly", process: "readonly", Buffer: "readonly" },
     },
     rules: {
       "no-unused-vars": "error",

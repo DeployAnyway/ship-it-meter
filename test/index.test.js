@@ -167,7 +167,7 @@ test("CLI JSON agrees with library, help/version/text and bad readiness exit 0",
   assert.deepEqual(JSON.parse(result.stdout), shipIt(ready));
   assert.ok(cli().stdout.includes("45/100 — Questionable"));
   assert.ok(cli("--help").stdout.includes("Usage:"));
-  assert.equal(cli("--version").stdout.trim(), "0.2.0");
+  assert.equal(cli("--version").stdout.trim(), "0.3.0");
   assert.equal(cli("--build", "fail").status, 0);
   const full = cli(
     "--tests",
