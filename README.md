@@ -190,6 +190,16 @@ node bin/cli.js --stdin --gate --min-score 90 --json < evidence.json
 
 --stdin accepts a bounded JSON evidence object (256 KiB); explicit flags override fields. --min-score requires --gate and a 0–100 threshold, default 80. Exit 0: gate passes or ordinary scoring succeeds; 1: gate blocked; 2: malformed input. Upstream pipeline status is your shell's responsibility.
 
+## Try the candidate from source
+
+```sh
+git clone --branch feature/quality-standard https://github.com/DeployAnyway/ship-it-meter.git
+cd ship-it-meter
+npm ci
+npm run build
+node bin/cli.js --help
+```
+
 ## Candidate quality standard
 
 The 0.3 candidate provides useful declaration types, ESM/CommonJS exports, installed-archive checks, and coverage gates (90% statements/lines/functions, 85% branches). CI covers Linux Node 22/24 and Windows/macOS Node 24. Node 22.13+ is required. No runtime dependencies, telemetry or network requests.
