@@ -1,9 +1,20 @@
 {
   "name": "@deployanyway/ship-it-meter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.",
   "type": "module",
-  "exports": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.d.ts",
+        "default": "./src/index.js"
+      },
+      "require": {
+        "types": "./index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "bin": {
     "ship-it-meter": "./bin/cli.js"
   },
@@ -12,16 +23,26 @@
     "bin",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "dist",
+    "index.d.ts",
+    "index.d.cts",
+    "MIGRATION.md"
   ],
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13"
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "build": "node scripts/build.mjs",
+    "pretest": "npm run build",
+    "prepack": "npm run build",
+    "coverage": "c8 --all --include=src/**/*.js --reporter=text --reporter=json-summary --reporter=lcov --check-coverage --lines=90 --statements=90 --functions=90 --branches=85 node --test test/*.test.js",
+    "test:types": "tsc -p tsconfig.json",
+    "verify:package": "node scripts/verify-package.mjs"
   },
   "repository": {
     "type": "git",
@@ -35,8 +56,12 @@
     "access": "public"
   },
   "devDependencies": {
+    "@types/node": "^26.6.4",
+    "c8": "^12.0.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.12.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "typescript": "^7.0.2"
   },
   "keywords": [
     "nodejs",
@@ -47,6 +72,12 @@
     "readiness",
     "test-coverage",
     "build",
-    "scoring"
-  ]
+    "scoring",
+    "typescript",
+    "humor",
+    "deployanyway"
+  ],
+  "main": "./dist/index.cjs",
+  "types": "./index.d.ts",
+  "homepage": "https://deployanyway.github.io/"
 }

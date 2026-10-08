@@ -1,5 +1,7 @@
 # ship-it-meter
 
+> **0.3.0 release candidate:** this branch is not published. npm still serves 0.2.0. New options below require a source checkout or locally packed candidate.
+
 [![npm version](https://img.shields.io/npm/v/%40deployanyway%2Fship-it-meter)](https://www.npmjs.com/package/@deployanyway/ship-it-meter)
 [![CI](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml)
 
@@ -167,3 +169,33 @@ API (import the named functions from this package):
 ```js
 preflight({ tests: 125, coverage: 82, build: true, day: "friday" });
 ```
+
+## An explicit gate for automation
+
+```js
+import { releaseGate } from "@deployanyway/ship-it-meter";
+const result = releaseGate(
+  { tests: 42, coverage: 92, build: true },
+  { minScore: 80 },
+);
+console.log(result.passed, result.blockers);
+```
+
+A gate requires positive test count, coverage evidence and a passing build. Failing tests, critical issues, lint failures and dirty changes block it even when a low score threshold is chosen. Scores remain a heuristic, not authorization to deploy. The result adds passed, blockers and minScore to the preflight checklist.
+
+```sh
+node bin/cli.js --tests 42 --coverage 92 --build pass --gate --json
+node bin/cli.js --stdin --gate --min-score 90 --json < evidence.json
+```
+
+--stdin accepts a bounded JSON evidence object (256 KiB); explicit flags override fields. --min-score requires --gate and a 0–100 threshold, default 80. Exit 0: gate passes or ordinary scoring succeeds; 1: gate blocked; 2: malformed input. Upstream pipeline status is your shell's responsibility.
+
+## Candidate quality standard
+
+The 0.3 candidate provides useful declaration types, ESM/CommonJS exports, installed-archive checks, and coverage gates (90% statements/lines/functions, 85% branches). CI covers Linux Node 22/24 and Windows/macOS Node 24. Node 22.13+ is required. No runtime dependencies, telemetry or network requests.
+
+From a candidate checkout: npm ci, npm run build, npm run coverage, npm run test:types, npm run verify:package. Pack verification installs a temporary local archive and checks module entries, types, executable and offline npm exec.
+
+[Contribution guide](CONTRIBUTING.md) · [Conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Roadmap](ROADMAP.md) · [Migration](MIGRATION.md).
+
+**Tools for developers who probably know better.** Software nobody requested, built with questionable priorities, and shipped with absolute confidence!
