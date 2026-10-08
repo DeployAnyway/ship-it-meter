@@ -1,5 +1,8 @@
 # ship-it-meter
 
+[![npm version](https://img.shields.io/npm/v/%40deployanyway%2Fship-it-meter)](https://www.npmjs.com/package/@deployanyway/ship-it-meter)
+[![CI](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml)
+
 Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.
 
 ```text
