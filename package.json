@@ -1,7 +1,7 @@
 {
   "name": "@deployanyway/ship-it-meter",
   "version": "0.1.0",
-  "description": "A humorous, deterministic and explainable deployment readiness score.",
+  "description": "Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.",
   "type": "module",
   "exports": "./src/index.js",
   "bin": {
@@ -37,5 +37,16 @@
   "devDependencies": {
     "eslint": "^10.12.0",
     "prettier": "^3.6.2"
-  }
+  },
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "cli",
+    "developer-tools",
+    "deployment",
+    "readiness",
+    "test-coverage",
+    "build",
+    "scoring"
+  ]
 }

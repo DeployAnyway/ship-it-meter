@@ -1,6 +1,6 @@
 # ship-it-meter
 
-A humorous, deterministic deployment readiness score that shows its homework.
+Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.
 
 ```text
 59/100 — Questionable
