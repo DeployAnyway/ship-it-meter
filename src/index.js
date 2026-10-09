@@ -187,3 +187,113 @@ export function preflight(input = {}) {
     );
   return { ...result, actions };
 }
+
+export { releaseScenarios, scenarioEvidence } from "./scenarios.js";
+/** Explain the gate as ordered work with observable completion criteria. */
+export function releasePlan(input = {}, options = {}) {
+  const gate = releaseGate(input, options);
+  const tasks = [];
+  const add = (id, priority, title, verify) =>
+    tasks.push({ id, priority, title, verify });
+  if (input.build !== true)
+    add(
+      "build",
+      "blocker",
+      "Get a passing build",
+      "Run the release build for the exact commit and record its successful result.",
+    );
+  if (!input.tests)
+    add(
+      "tests",
+      "blocker",
+      "Run a nonempty test suite",
+      "Record the test count and outcome for the release commit.",
+    );
+  if (input.failingTests)
+    add(
+      "failing-tests",
+      "blocker",
+      "Repair failing tests",
+      "Reproduce each failure, fix its cause and rerun the suite.",
+    );
+  if (input.coverage === undefined)
+    add(
+      "coverage-evidence",
+      "blocker",
+      "Measure coverage",
+      "Generate coverage for the release commit and record the percentage.",
+    );
+  else if (input.coverage < 80)
+    add(
+      "coverage-review",
+      "review",
+      "Review untested paths",
+      "Inspect uncovered critical paths and add meaningful tests where needed.",
+    );
+  if (input.criticalIssues)
+    add(
+      "critical-issues",
+      "blocker",
+      "Resolve critical issues",
+      "Record the resolution and verify the affected behavior.",
+    );
+  if (input.lintFailures)
+    add(
+      "lint",
+      "blocker",
+      "Fix lint failures",
+      "Run the configured lint checks successfully.",
+    );
+  if (input.uncommittedChanges)
+    add(
+      "worktree",
+      "blocker",
+      "Reconcile local changes",
+      "Commit or stash intentionally and verify the exact release source.",
+    );
+  if (input.branch && !["main", "master"].includes(input.branch.trim()))
+    add(
+      "branch",
+      "review",
+      "Confirm release branch",
+      "Verify that this branch is the intended release source and that its CI passed.",
+    );
+  if (input.day?.trim().toLowerCase() === "friday")
+    add(
+      "friday",
+      "review",
+      "Confirm weekend support",
+      "Identify monitoring ownership and a tested rollback path.",
+    );
+  if (gate.score < gate.minScore)
+    add(
+      "score",
+      "blocker",
+      "Improve evidence to the configured threshold",
+      "Address score deductions, rerun the checks and reevaluate the gate.",
+    );
+  add(
+    "rollback",
+    "release",
+    "Prepare the return route",
+    "Verify the rollback artifact and procedure before deployment.",
+  );
+  add(
+    "monitoring",
+    "release",
+    "Watch the actual release",
+    "Check health and error metrics after deployment and name an owner.",
+  );
+  const summaries = {
+    "Absolutely Not": "The evidence says stop. The confidence hat can wait.",
+    Questionable:
+      "The release has questions. Answer them before adding confetti.",
+    "Probably Fine": "Close is a useful direction, not a deployment receipt.",
+    "Ship It": "Good evidence. Keep the parachute and watch the landing.",
+    "Suspiciously Ready":
+      "Boring, verified readiness. Give the checks their share of the applause.",
+  };
+  const rank = { blocker: 0, review: 1, release: 2 };
+  tasks.sort((a, b) => rank[a.priority] - rank[b.priority]);
+  return { ...gate, summary: summaries[gate.verdict], tasks };
+}
