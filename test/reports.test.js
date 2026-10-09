@@ -72,10 +72,11 @@ test("actual Node TAP, c8 and esbuild output form passing measured receipts", ()
     const build = spawnSync(
       process.execPath,
       [
-        "node_modules/esbuild/bin/esbuild",
-        "test/fixtures/value.js",
-        "--bundle",
-        "--outfile=" + join(temp, "built.js"),
+        "--input-type=module",
+        "-e",
+        "import {buildSync} from 'esbuild'; buildSync({entryPoints:['test/fixtures/value.js'],bundle:true,outfile:" +
+          JSON.stringify(join(temp, "built.js")) +
+          "});",
       ],
       { encoding: "utf8" },
     );
