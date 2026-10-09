@@ -297,3 +297,8 @@ export function releasePlan(input = {}, options = {}) {
   tasks.sort((a, b) => rank[a.priority] - rank[b.priority]);
   return { ...gate, summary: summaries[gate.verdict], tasks };
 }
+export {
+  parseTestReport,
+  parseCoverageReport,
+  evaluateReports,
+} from "./reports.js";

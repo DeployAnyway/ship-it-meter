@@ -1,5 +1,5 @@
 import { parseArgs } from "node:util";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { URL } from "node:url";
 import {
   shipIt,
@@ -8,6 +8,7 @@ import {
   releasePlan,
   releaseScenarios,
   scenarioEvidence,
+  evaluateReports,
 } from "./index.js";
 
 import { readStdin } from "./input.js";
@@ -19,6 +20,9 @@ try {
       version: { type: "boolean", short: "v" },
       json: { type: "boolean" },
       stdin: { type: "boolean" },
+      reports: { type: "boolean" },
+      "report-file": { type: "string" },
+      policy: { type: "string" },
       gate: { type: "boolean" },
       plan: { type: "boolean" },
       scenario: { type: "string" },
@@ -38,7 +42,7 @@ try {
   });
   if (values.help) {
     console.log(
-      "Usage: ship-it-meter [options]\n\nOptions:\n  --tests number    Total tests\n  --failing number  Failing tests\n  --coverage number Coverage percent\n  --build pass|fail Build result\n  --critical number Open critical issues\n  --lint number     Lint failures\n  --dirty           Uncommitted changes\n  --branch name     Branch name\n  --day weekday     Full weekday name\n  --scenario name   Explore a named evidence scenario\n  --list-scenarios  List sample scenarios\n  --plan            Gate plus prioritized tasks and verification criteria\n  --checklist       Actionable, mildly concerned preflight\n  --json            Structured output\n  -h, --help        Help\n  -v, --version     Version\n\n--stdin reads a JSON evidence object (256 KiB); explicit flags override it. --gate requires passing evidence; --min-score 80 selects its threshold. A blocked gate exits 1. Missing test, coverage, and build evidence reduces readiness.\nExit codes: 0 scored successfully; 2 invalid arguments.",
+      "Usage: ship-it-meter [options]\n\nOptions:\n  --reports         Read report bundle JSON from stdin (10 MiB)\n  --report-file path Read report bundle JSON file\n  --policy JSON      Receipt thresholds/freshness; receipt mode only\n  --tests number    Total tests\n  --failing number  Failing tests\n  --coverage number Coverage percent\n  --build pass|fail Build result\n  --critical number Open critical issues\n  --lint number     Lint failures\n  --dirty           Uncommitted changes\n  --branch name     Branch name\n  --day weekday     Full weekday name\n  --scenario name   Explore a named evidence scenario\n  --list-scenarios  List sample scenarios\n  --plan            Gate plus prioritized tasks and verification criteria\n  --checklist       Actionable, mildly concerned preflight\n  --json            Structured output\n  -h, --help        Help\n  -v, --version     Version\n\n--stdin reads a JSON evidence object (256 KiB); explicit flags override it. --gate requires passing evidence; --min-score 80 selects its threshold. A blocked gate exits 1. Missing test, coverage, and build evidence reduces readiness.\nExit codes: 0 scored successfully; 2 invalid arguments.",
     );
   } else if (values.version) {
     console.log(
@@ -52,6 +56,42 @@ try {
         .map((item) => item.name + " — " + item.description)
         .join("\n"),
     );
+  } else if (values.reports || values["report-file"] !== undefined) {
+    if (values.reports && values["report-file"] !== undefined)
+      throw new TypeError("Choose --reports stdin or --report-file.");
+    const allowed = new Set(["reports", "report-file", "policy", "json"]);
+    for (const [key, value] of Object.entries(values))
+      if (value !== undefined && !allowed.has(key))
+        throw new TypeError(`--${key} cannot combine with report evaluation.`);
+    if (
+      values["report-file"] !== undefined &&
+      statSync(values["report-file"]).size > 10485760
+    )
+      throw new RangeError("Report bundle exceeds 10 MiB.");
+    const text =
+      values["report-file"] !== undefined
+        ? readFileSync(values["report-file"], "utf8")
+        : await readStdin(process.stdin, 10485760);
+    if (Buffer.byteLength(text) > 10485760)
+      throw new RangeError("Report bundle exceeds 10 MiB.");
+    const policy = values.policy === undefined ? {} : JSON.parse(values.policy);
+    const result = evaluateReports(JSON.parse(text), policy);
+    if (!result.passed) process.exitCode = 1;
+    console.log(
+      values.json
+        ? JSON.stringify(result, null, 2)
+        : `Receipt gate: ${result.passed ? "PASS" : "BLOCKED"} for ${result.commit}\n` +
+            result.receipts
+              .map(
+                (item) =>
+                  `${item.kind}: ${item.accepted ? "accepted" : "rejected"}`,
+              )
+              .join("\n") +
+            "\n" +
+            result.blockers.map((item) => "- " + item).join("\n"),
+    );
+  } else if (values.policy !== undefined) {
+    throw new TypeError("--policy requires --reports or --report-file.");
   } else {
     const input = values.stdin
       ? JSON.parse(await readStdin())

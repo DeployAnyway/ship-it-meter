@@ -1,0 +1,89 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 1,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 1,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 1,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 3,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1791509232581,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "a measured passing test",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1791509236497,
+          "status": "passed",
+          "title": "a measured passing test"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "a skipped test is not passing evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1791509236500,
+          "status": "pending",
+          "title": "a skipped test is not passing evidence"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "future work is not passing evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1791509236500,
+          "status": "todo",
+          "title": "future work is not passing evidence"
+        }
+      ],
+      "endTime": 1791509236501,
+      "message": "",
+      "name": "fixtures/receipt.test.cjs",
+      "startTime": 1791509234106,
+      "status": "focused",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}

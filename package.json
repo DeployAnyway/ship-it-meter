@@ -1,7 +1,7 @@
 {
   "name": "@deployanyway/ship-it-meter",
-  "version": "0.4.0",
-  "description": "Explainable deployment readiness scoring for tests, coverage, and builds. Turns questionable confidence into a number.",
+  "version": "1.0.0",
+  "description": "Report-backed release policies, prioritized plans and explainable readiness scores. Confidence is not a build artifact; bring your receipts.",
   "type": "module",
   "exports": {
     ".": {
@@ -27,7 +27,8 @@
     "dist",
     "index.d.ts",
     "index.d.cts",
-    "MIGRATION.md"
+    "MIGRATION.md",
+    "examples"
   ],
   "engines": {
     "node": ">=22.13"
@@ -75,7 +76,11 @@
     "scoring",
     "typescript",
     "humor",
-    "deployanyway"
+    "deployanyway",
+    "ci",
+    "release-policy",
+    "test-reports",
+    "istanbul"
   ],
   "main": "./dist/index.cjs",
   "types": "./index.d.ts",

@@ -1,5 +1,55 @@
 # ship-it-meter
 
+## Show Your Receipts: release policies from actual reports (1.0.0)
+
+evaluateReports(bundle, policy) turns actual test, coverage and build receipts into a release gate and prioritized repair tasks. parseTestReport supports completed Node TAP v13 and Jest JSON. parseCoverageReport supports c8/Istanbul coverage-summary.json. Skipped/todo tests are excluded from executed evidence; failed/cancelled tests, unsuccessful Jest suites and collected-only/interrupted runs do not count as successful execution. Coverage counts must reconcile; empty lines/statements are not measured evidence.
+
+```js
+import { evaluateReports } from "@deployanyway/ship-it-meter";
+const result = evaluateReports(
+  {
+    commit: "abc123",
+    tests: {
+      commit: "abc123",
+      capturedAt: "2026-10-09T02:00:00Z",
+      format: "node-tap",
+      data: tapOutput,
+    },
+    coverage: {
+      commit: "abc123",
+      capturedAt: "2026-10-09T02:00:00Z",
+      format: "istanbul-summary",
+      data: coverageSummary,
+    },
+    build: {
+      commit: "abc123",
+      capturedAt: "2026-10-09T02:00:00Z",
+      exitCode: buildExitCode,
+    },
+  },
+  { minTests: 1, minCoverage: 80, minScore: 80, maxAgeMs: 3600000 },
+);
+if (!result.passed) console.error(result.blockers);
+```
+
+All three receipts are required, must identify the same nonempty bundle commit, and use valid UTC ISO capturedAt timestamps. Future/stale receipts block. Default policy: at least one executed test, all four coverage percentages >=80, passing build and score >=80, max age one hour. now can be supplied for deterministic evaluation. Unknown policy keys throw, so misspelled thresholds do not silently apply defaults. The policy is configurable; it does not alter your artifacts.
+
+Result adds evidence, receipts, commit, policy and evaluatedAt to a release plan. Each receipt exposes acceptance and issues; rejected receipts add blocker tasks with verification criteria. The final summary/passed value follows receipt blockers, even when the heuristic score looks good. Parse helpers throw on malformed reports; evaluateReports converts report problems into blockers. Invalid policy/bundle configuration throws.
+
+```sh
+ship-it-meter --report-file receipts.json --policy '{"minCoverage":90,"maxAgeMs":1800000}' --json
+cat receipts.json | ship-it-meter --reports --json
+node node_modules/@deployanyway/ship-it-meter/examples/report-gate.mjs receipts.json
+```
+
+Report CLI input is bounded to 10 MiB and exits 1 when blocked, 2 for invalid arguments/configuration. Receipt mode rejects manual evidence overrides and conflicting gate/scenario flags. The browser demo uses pure parsers; file reading and CI collection happen in Node. Metadata is a claim from your trusted pipeline, not a cryptographic attestation; do not relabel old reports or trust arbitrary submitted bundles. The gate neither runs your CI nor deploys anything. See examples/collect-receipts.mjs for collecting new Node test and c8 coverage reports together, followed by your actual npm build, inside an npm script. It requires c8 as a project dev dependency, Node-discoverable tests (or explicit test file arguments), npm run build, an unchanged Git commit and clean tracked source. Generated/untracked files must be excluded from your test configuration; receipt metadata remains a trusted pipeline claim.
+
+## Stable v1 contract
+
+Node 22.13+ or Node 24. MIT licensed. CLI flags, structured fields, ESM/CommonJS exports and declarations are covered by tests and installed-package checks. Existing 0.4 APIs remain available except the explicitly documented doggo-log redaction/text-context changes. Future incompatible public API changes require a major release; callers should consume structured fields rather than parse jokes. Exact humorous wording and seeded catalog choices are version-specific. No telemetry, external API keys or network service is needed for core use.
+
+Run npm test, npm run lint, npm run format:check, npm run coverage, npm run test:types and npm run verify:package from a source checkout. Runnable examples are shipped under examples/. The root demo is https://deployanyway.github.io/.
+
 ## Evidence into an actual release plan (0.4.0)
 
 Twelve named demonstration scenarios show passing evidence, Friday releases, missing evidence, failed builds, failing tests, low coverage, critical issues, lint failures, dirty worktrees, feature branches, zero tests and weekend incidents. These are examples, never evidence about your real project.

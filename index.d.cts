@@ -63,3 +63,55 @@ export function releasePlan(
   input?: Evidence,
   options?: { minScore?: number },
 ): ReleasePlan;
+export type TestReportFormat = "node-tap" | "jest";
+export interface TestReportSummary {
+  tests: number;
+  passedTests: number;
+  failingTests: number;
+  skippedTests: number;
+  todoTests: number;
+  successful: boolean;
+}
+export function parseTestReport(
+  data: unknown,
+  format?: TestReportFormat,
+): TestReportSummary;
+export function parseCoverageReport(
+  data: unknown,
+): Record<"lines" | "statements" | "functions" | "branches", number>;
+export interface ReportMetadata {
+  commit: string;
+  capturedAt: string;
+}
+export interface ReportBundle {
+  commit: string;
+  tests?: ReportMetadata & { format: TestReportFormat; data: unknown };
+  coverage?: ReportMetadata & { format: "istanbul-summary"; data: unknown };
+  build?: ReportMetadata & { exitCode: number };
+}
+export interface ReportPolicy {
+  minTests?: number;
+  minCoverage?: number;
+  minScore?: number;
+  maxAgeMs?: number;
+  now?: string;
+}
+export interface ReportReceipt {
+  kind: "tests" | "coverage" | "build";
+  format: string;
+  commit: string | null;
+  capturedAt: string | null;
+  accepted: boolean;
+  issues: string[];
+}
+export interface ReportEvaluation extends ReleasePlan {
+  evidence: Evidence;
+  receipts: ReportReceipt[];
+  commit: string;
+  policy: Required<Omit<ReportPolicy, "now">>;
+  evaluatedAt: string;
+}
+export function evaluateReports(
+  bundle: ReportBundle,
+  options?: ReportPolicy,
+): ReportEvaluation;
