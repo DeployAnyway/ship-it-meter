@@ -108,6 +108,28 @@ try {
     ],
     temp,
   );
+  assert.ok(
+    pack.files.some((f) => f.path === "examples/report-gate.mjs"),
+    "Runnable example must ship",
+  );
+  assert.equal(
+    run(
+      [
+        "--input-type=module",
+        "-e",
+        "import * as api from '@deployanyway/ship-it-meter';const r=api.evaluateReports({commit:'test'},{now:'2026-10-09T00:00:00Z'}); if(r.passed||r.receipts.length!==3)throw new Error('Missing reports passed'); console.log(JSON.stringify(r));",
+      ],
+      temp,
+    ),
+    run(
+      [
+        "--input-type=commonjs",
+        "-e",
+        "const api=require('@deployanyway/ship-it-meter');const r=api.evaluateReports({commit:'test'},{now:'2026-10-09T00:00:00Z'}); if(r.passed||r.receipts.length!==3)throw new Error('Missing reports passed'); console.log(JSON.stringify(r));",
+      ],
+      temp,
+    ),
+  );
   console.log(
     JSON.stringify(
       {

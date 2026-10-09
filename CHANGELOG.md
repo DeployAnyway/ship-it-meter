@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+- Show Your Receipts: release policies from actual reports.
+- Typed API, CLI integration, runnable codebase example and meaningful workflow tests.
+- Stable contracts and migration guidance; original humor stays around accurate facts.
+
 ## 0.4.0
 
 Twelve named demonstration scenarios show passing evidence, Friday releases, missing evidence, failed builds, failing tests, low coverage, critical issues, lint failures, dirty worktrees, feature branches, zero tests and weekend incidents. These are examples, never evidence about your real project.

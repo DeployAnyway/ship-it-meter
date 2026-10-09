@@ -1,9 +1,11 @@
-# 0.4.0 — 2026-10-08
+# 1.0.0 — Show Your Receipts: release policies from actual reports
 
-12 discoverable evidence scenarios and releasePlan with ordered blocker/review/release tasks and observable completion criteria; API and CLI scenarios/plans; passing/blocked gate exit codes preserved.
+Report-backed release policies, prioritized plans and explainable readiness scores. Confidence is not a build artifact; bring your receipts.
 
-Requires Node 22.13+ or 24. See README for copyable CLI and API examples. All required source, type, coverage and installed archive checks passed locally; CI must pass on the final PR head before merging. Original content, MIT code, no backend calls from the libraries.
+Report APIs and CLI receipt mode are additive. Existing supplied-evidence scoring remains a heuristic and named scenarios remain examples. Use report policies for actual CI gating; do not confuse demonstration scenarios with measured artifacts.
 
-## Compatibility
+Install: `npm install @deployanyway/ship-it-meter@1.0.0`
 
-Existing APIs and defaults remain available; the new release-plan mode is explicit.
+See README for runnable API/CLI examples, supported formats, defaults and limitations. Existing catalogs remain. Core APIs require no online services. Root demo: https://deployanyway.github.io/.
+
+Validation is recorded in the v1 release report after final CI and installed-package verification.

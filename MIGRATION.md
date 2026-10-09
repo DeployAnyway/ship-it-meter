@@ -9,3 +9,9 @@ Install 0.3.0 with npm. Seeds and exact humorous wording are version-specific. D
 12 discoverable evidence scenarios and releasePlan with ordered blocker/review/release tasks and observable completion criteria; API and CLI scenarios/plans; passing/blocked gate exit codes preserved.
 
 Existing defaults and entry points remain available. The new release plan and demonstration scenarios are opt-in; the original scoring and gate rules are retained.
+
+## 0.4.0 to stable 1.0.0
+
+Report APIs and CLI receipt mode are additive. Existing supplied-evidence scoring remains a heuristic and named scenarios remain examples. Use report policies for actual CI gating; do not confuse demonstration scenarios with measured artifacts.
+
+See README for exact contracts, bounds and failure behavior.
