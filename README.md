@@ -1,6 +1,29 @@
 # ship-it-meter
 
-> **Version 0.3.0:** install from npm with Node 22.13+ or Node 24. See MIGRATION.md for changes from 0.2.0.
+## Evidence into an actual release plan (0.4.0)
+
+Twelve named demonstration scenarios show passing evidence, Friday releases, missing evidence, failed builds, failing tests, low coverage, critical issues, lint failures, dirty worktrees, feature branches, zero tests and weekend incidents. These are examples, never evidence about your real project.
+
+```sh
+npx @deployanyway/ship-it-meter --list-scenarios
+npx @deployanyway/ship-it-meter --scenario failed-build --plan
+npx @deployanyway/ship-it-meter --scenario ready --plan --json
+```
+
+```js
+import {
+  releasePlan,
+  releaseScenarios,
+  scenarioEvidence,
+} from "@deployanyway/ship-it-meter";
+console.log(releaseScenarios());
+const plan = releasePlan(scenarioEvidence("failing-tests"), { minScore: 80 });
+console.log(plan.passed, plan.summary, plan.tasks);
+```
+
+`releasePlan(evidence?, options?)` includes the existing gate plus prioritized tasks with stable IDs and observable verification criteria. Priorities are blocker, review and release. `scenarioEvidence(name)` and `releaseScenarios()` return independent evidence copies. CLI flags override scenario fields; stdin and scenario cannot be combined. Choose one of plan, gate or checklist. A blocked plan/gate exits 1; invalid input exits 2. Readiness remains a heuristic based on caller-supplied evidence; it does not run CI or approve deployment automatically. Coverage below 80 adds a review task, not a separate hard blocker; the configured score threshold and existing gate rules still decide the gate.
+
+> **Version 0.4.0:** install from npm with Node 22.13+ or Node 24. See MIGRATION.md for changes from 0.2.0.
 
 [![npm version](https://img.shields.io/npm/v/%40deployanyway%2Fship-it-meter)](https://www.npmjs.com/package/@deployanyway/ship-it-meter)
 [![CI](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DeployAnyway/ship-it-meter/actions/workflows/ci.yml)

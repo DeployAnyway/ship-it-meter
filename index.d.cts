@@ -41,3 +41,25 @@ export function releaseGate(
   input?: Evidence,
   options?: { minScore?: number },
 ): Gate;
+
+export interface ReleaseTask {
+  id: string;
+  priority: "blocker" | "review" | "release";
+  title: string;
+  verify: string;
+}
+export interface ReleasePlan extends Gate {
+  summary: string;
+  tasks: ReleaseTask[];
+}
+export interface ReleaseScenario {
+  name: string;
+  description: string;
+  evidence: Evidence;
+}
+export function releaseScenarios(): ReleaseScenario[];
+export function scenarioEvidence(name: string): Evidence;
+export function releasePlan(
+  input?: Evidence,
+  options?: { minScore?: number },
+): ReleasePlan;

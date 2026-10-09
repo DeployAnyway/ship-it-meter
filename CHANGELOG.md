@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+Twelve named demonstration scenarios show passing evidence, Friday releases, missing evidence, failed builds, failing tests, low coverage, critical issues, lint failures, dirty worktrees, feature branches, zero tests and weekend incidents. These are examples, never evidence about your real project.
+
+```sh
+
+
 ## 0.3.0 — 2026-10-08
 
 - Useful structured API/CLI additions described in README.
@@ -21,3 +28,4 @@
 
 - Deterministic readiness score with explanations and technical blocker caps.
 - CLI, documented scoring rules, tests, linting, formatting, and Node 22/24 CI.
+```
